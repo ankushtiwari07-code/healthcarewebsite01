@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Doctor Appointment | Health Care</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      color: #333;
+    }
+
+    /* ======== HEADER ======== */
+    header {
+      background: linear-gradient(90deg, #1565c0, #1e88e5);
+      color: white;
+      text-align: center;
+      padding: 60px 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      font-size: 2.8em;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 1.2em;
+      margin-top: 10px;
+      color: #e3f2fd;
+    }
+
+    /* ======== BUTTON SECTION ======== */
+    .button-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      padding: 80px 20px;
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .btn-primary {
+      background: #1976d2;
+      color: white;
+      padding: 15px 35px;
+      border-radius: 30px;
+      border: none;
+      font-size: 1.1em;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn-primary:hover {
+      background: #0d47a1;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.25);
+    }
+
+    /* ======== ABOUT & AIMS SECTION ======== */
+    .about, .aims {
+      max-width: 900px;
+      margin: 60px auto;
+      background: #fff;
+      border-radius: 15px;
+      padding: 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .about h2, .aims h2 {
+      color: #0d47a1;
+      font-size: 2em;
+      border-left: 5px solid #1565c0;
+      padding-left: 10px;
+      margin-bottom: 20px;
+    }
+
+    .about p, .aims p, .aims li {
+      font-size: 1.1em;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    .aims ul {
+      margin-left: 20px;
+      padding-left: 10px;
+    }
+
+    .aims .btn-container {
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    .aims .btn-container .btn-primary {
+      background: #0d47a1;
+      padding: 12px 28px;
+      border-radius: 25px;
+      font-size: 1em;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ======== FOOTER ======== */
+    footer {
+      background: #0d47a1;
+      color: #e3f2fd;
+      text-align: center;
+      padding: 20px 10px;
+      font-size: 0.95em;
+      margin-top: 50px;
+    }
+
+    footer span {
+      color: #fff;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======== HEADER ======== -->
+  <header>
+    <h1>HEALTH CARE Portal</h1>
+    <p>Book your appointment with trusted doctors</p>
+  </header>
+
+  <!-- ======== MAIN BUTTONS ======== -->
+  <div class="button-section">
+    <button class="btn-primary" onclick="window.location.href='register.html'">📝 Register</button>
+    <button class="btn-primary" onclick="window.location.href='login.html'">🔑 Login</button>
+  </div>
+
+  <!-- ======== ABOUT US ======== -->
+  <section class="about">
+    <h2>About Us</h2>
+    <p>
+      At <strong>HEALTH CARE</strong>, we believe that everyone deserves quick and reliable access to healthcare services. 
+      Our platform connects patients with trusted doctors and healthcare professionals across multiple specialties.
+    </p>
+    <p>
+      Whether you need a general consultation, a specialist visit, or follow-up care, our easy-to-use system allows you to 
+      book appointments online and receive quality medical guidance without long waiting times.
+    </p>
+    <p>
+      We aim to make healthcare accessible, transparent, and affordable — empowering you to take control of your health from anywhere, anytime.
+    </p>
+  </section>
+
+  <!-- ======== OUR AIMS ======== -->
+  <section class="aims">
+    <h2>Our Aims</h2>
+    <ul>
+      <li>To bridge the gap between patients and healthcare professionals through technology.</li>
+      <li>To ensure every individual can access reliable medical advice quickly and conveniently.</li>
+      <li>To promote preventive healthcare awareness and regular check-ups.</li>
+      <li>To provide transparent, secure, and easy appointment booking experiences.</li>
+      <li>To create a digital healthcare ecosystem focused on trust, care, and accessibility for all.</li>
+    </ul>
+
+    <div class="btn-container">
+      <button class="btn-primary" onclick="window.location.href='mission.html'">🌐 Learn More</button>
+    </div>
+  </section>
+
+  <!-- ======== FOOTER ======== -->
+  <footer>
+    <p>&copy; <span id="year"></span> HEALTH CARE. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>

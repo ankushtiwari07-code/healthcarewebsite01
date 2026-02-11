@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Doctor Profile | Health Care</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(90deg, #1565c0, #1e88e5);
+      color: white;
+      text-align: center;
+      padding: 50px 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      font-size: 2.5em;
+      margin: 0;
+    }
+
+    .profile-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      padding: 60px 20px;
+    }
+
+    .profile-image {
+      flex: 1 1 300px;
+      text-align: center;
+    }
+
+    .profile-image img {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .profile-info {
+      flex: 2 1 400px;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .profile-info h2 {
+      color: #1565c0;
+      margin-bottom: 10px;
+    }
+
+    .profile-info h4 {
+      color: #0d47a1;
+      margin-bottom: 20px;
+    }
+
+    .profile-info p {
+      line-height: 1.6;
+      font-size: 1em;
+      margin-bottom: 20px;
+    }
+
+    .achievements {
+      background: #f5f9ff;
+      padding: 30px 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+
+    .achievements h3 {
+      color: #0d47a1;
+      margin-bottom: 15px;
+    }
+
+    .achievements ul {
+      list-style: disc;
+      padding-left: 25px;
+      color: #333;
+    }
+
+    button {
+      background: #1976d2;
+      color: white;
+      padding: 10px 25px;
+      border-radius: 25px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #0d47a1;
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background: #0d47a1;
+      color: #e3f2fd;
+      text-align: center;
+      padding: 15px 10px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Doctor Profile</h1>
+    <p>Learn more about our top medical experts</p>
+  </header>
+
+  <div class="profile-container">
+    <div class="profile-image">
+      <img id="doctorImage" src="" alt="Doctor Photo">
+    </div>
+
+    <div class="profile-info">
+      <h2 id="doctorName"></h2>
+      <h4 id="doctorSpecialty"></h4>
+      <p id="doctorBio"></p>
+
+      <div class="achievements">
+        <h3>Achievements & Recognition</h3>
+        <ul id="doctorAchievements"></ul>
+      </div>
+
+      <br>
+      <button onclick="window.location.href='index.html'">⬅ Back to Home</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; <span id="year"></span> HEALTH CARE. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Get doctor name from URL
+    const params = new URLSearchParams(window.location.search);
+    const doctor = params.get("doctor");
+
+    // Doctor Data
+    const doctorData = {
+      DeviShetty: {
+        name: "Dr. Devi Shetty",
+        specialty: "Cardiac Surgeon | Founder, Narayana Health",
+        image: "https://upload.wikimedia.org/wikipedia/commons/2/28/Devi_Shetty.jpg",
+        bio: "Dr. Devi Shetty is one of India’s most renowned cardiac surgeons and the founder of Narayana Health. He has performed over 15,000 heart surgeries and is known for making healthcare accessible to all sections of society.",
+        achievements: [
+          "Founder of Narayana Hrudayalaya, Bengaluru",
+          "Recipient of Padma Shri and Padma Bhushan",
+          "Advocate for affordable cardiac care",
+          "Introduced micro-health insurance in India"
+        ]
+      },
+      NareshTrehan: {
+        name: "Dr. Naresh Trehan",
+        specialty: "Cardiothoracic Surgeon | Chairman, Medanta Hospital",
+        image: "https://upload.wikimedia.org/wikipedia/commons/e/e3/Naresh_Trehan_2010.jpg",
+        bio: "Dr. Naresh Trehan is one of India’s leading heart surgeons with over 50,000 surgeries to his credit. He established Medanta Hospital, which is among the top healthcare institutions in the country.",
+        achievements: [
+          "Performed over 50,000 open heart surgeries",
+          "Awarded Padma Bhushan and Padma Shri",
+          "Founder of Medanta – The Medicity",
+          "Member of the American College of Surgeons"
+        ]
+      },
+      RandeepGuleria: {
+        name: "Dr. Randeep Guleria",
+        specialty: "Pulmonologist | Former Director, AIIMS Delhi",
+        image: "https://upload.wikimedia.org/wikipedia/commons/a/aa/Randeep_Guleria.jpg",
+        bio: "Dr. Randeep Guleria is a globally respected pulmonologist known for his leadership during the COVID-19 pandemic. He has been instrumental in developing critical care and pulmonary medicine in India.",
+        achievements: [
+          "Former Director of AIIMS, New Delhi",
+          "Recipient of Padma Shri for medicine",
+          "Expert advisor to WHO and Government of India",
+          "Led AIIMS’ COVID-19 response"
+        ]
+      },
+      SoumyaSwaminathan: {
+        name: "Dr. Soumya Swaminathan",
+        specialty: "Pediatrician & Researcher | Former Chief Scientist, WHO",
+        image: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Soumya_Swaminathan_2018.jpg",
+        bio: "Dr. Soumya Swaminathan is an internationally acclaimed scientist and pediatrician who served as the Chief Scientist at the World Health Organization. She has worked extensively on tuberculosis and global health policy.",
+        achievements: [
+          "Former Chief Scientist, WHO",
+          "Former Director General of ICMR",
+          "Padma Award recipient",
+          "Published 400+ scientific papers"
+        ]
+      },
+      SanjivKaul: {
+        name: "Dr. Sanjiv Kaul",
+        specialty: "Cardiologist | Director, OHSU Knight Cardiovascular Institute",
+        image: "https://upload.wikimedia.org/wikipedia/commons/2/2a/Sanjiv_Kaul.jpg",
+        bio: "Dr. Sanjiv Kaul is a renowned cardiologist known for his pioneering work in myocardial perfusion imaging and cardiovascular research. His work has advanced heart care globally.",
+        achievements: [
+          "Director of OHSU Knight Cardiovascular Institute",
+          "Pioneer in contrast echocardiography",
+          "Professor at Oregon Health & Science University",
+          "Authored numerous research publications"
+        ]
+      }
+    };
+
+    // Display doctor info
+    const info = doctorData[doctor];
+    if (info) {
+      document.getElementById("doctorName").textContent = info.name;
+      document.getElementById("doctorSpecialty").textContent = info.specialty;
+      document.getElementById("doctorImage").src = info.image;
+      document.getElementById("doctorBio").textContent = info.bio;
+      const ul = document.getElementById("doctorAchievements");
+      info.achievements.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        ul.appendChild(li);
+      });
+    } else {
+      document.querySelector(".profile-container").innerHTML = "<h2 style='text-align:center;width:100%;color:#d32f2f;'>Doctor information not found.</h2>";
+    }
+  </script>
+
+</body>
+</html>
