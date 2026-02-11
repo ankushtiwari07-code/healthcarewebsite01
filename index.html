@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Health Care · India's Trusted Telemedicine</title>
+  <!-- professional font: Inter + fallback -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 (free icons) for subtle pro look -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ---------- PROFESSIONAL RESET / DESIGN SYSTEM ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f8fcff;
+      color: #0a3142;
+      line-height: 1.5;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    h1, h2, h3, h4 {
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* ----- PROFESSIONAL NAVIGATION (sticky, minimal) ----- */
+    nav {
+      background: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 40px;
+      box-shadow: 0 4px 20px rgba(0, 64, 107, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      background-color: rgba(255,255,255,0.92);
+      border-bottom: 1px solid #e6f0fa;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo i {
+      color: #0a6e9c;
+      font-size: 28px;
+    }
+
+    .nav-logo span {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(145deg, #0c5380, #1f6e9c);
+      
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #194a6a;
+      font-weight: 600;
+      font-size: 1.02rem;
+      transition: 0.2s;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a i {
+      margin-right: 6px;
+      color: #2c7da0;
+    }
+
+    .nav-links a:hover {
+      border-bottom-color: #0f86b6;
+      color: #0b4d6f;
+    }
+
+    .nav-cta {
+      background: #0b6e9c;
+      color: white !important;
+      padding: 10px 22px !important;
+      border-radius: 40px;
+      border-bottom: none !important;
+      font-weight: 600;
+      box-shadow: 0 6px 12px rgba(10, 110, 158, 0.18);
+    }
+
+    .nav-cta i {
+      color: white !important;
+    }
+
+    .nav-cta:hover {
+      background: #0a4f73;
+      color: white !important;
+      border-bottom: none !important;
+    }
+
+    /* ------ HERO SECTION (elevated, professional) ------ */
+    header {
+      background: linear-gradient(108deg, #e6f2fa 0%, #ffffff 70%);
+      padding: 64px 40px 80px;
+      border-bottom-left-radius: 48px;
+      border-bottom-right-radius: 48px;
+      margin: 0 16px 16px;
+      box-shadow: 0 2px 20px rgba(37, 99, 128, 0.04);
+    }
+
+    .hero-grid {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      max-width: 1300px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+
+    .hero-content {
+      flex: 1 1 380px;
+    }
+
+    .hero-badge {
+      background: #cbe6f1;
+      display: inline-block;
+      padding: 8px 20px;
+      border-radius: 60px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #0f516c;
+      margin-bottom: 20px;
+      border: 1px solid #9ac7de;
+    }
+
+    .hero-content h1 {
+      font-size: 3.4rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #043b4e;
+      margin-bottom: 24px;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(145deg, #ffb347, #ff9f1c);
+      
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-content p {
+      font-size: 1.2rem;
+      color: #2c4e62;
+      margin-bottom: 32px;
+      max-width: 550px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 24px;
+    }
+
+    .stat-item h3 {
+      font-size: 2rem;
+      color: #0d4e6e;
+      margin-bottom: 4px;
+    }
+
+    .stat-item p {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #3e6a82;
+      margin-bottom: 0;
+    }
+
+    .hero-image {
+      flex: 1 1 420px;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 24px;
+      box-shadow: 0 25px 40px -12px rgba(2, 73, 110, 0.28);
+      border: 4px solid rgba(255,255,255,0.7);
+    }
+
+    /* ------ BUTTONS (elevated, consistent) ------ */
+    .btn-group {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: #0f6e9c;
+      border: none;
+      color: white;
+      padding: 14px 38px;
+      border-radius: 50px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: 0.25s;
+      box-shadow: 0 10px 18px -6px #1e6381;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .btn-primary i {
+      font-size: 1.1rem;
+    }
+
+    .btn-primary:hover {
+      background: #0a4f73;
+      transform: translateY(-3px);
+      box-shadow: 0 18px 26px -8px #0e5a7a;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid #0f6e9c;
+      color: #0f4e6c;
+      padding: 14px 34px;
+      border-radius: 50px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+
+    .btn-outline i {
+      color: #0f6e9c;
+    }
+
+    .btn-outline:hover {
+      background: #e3f0f9;
+      border-color: #0b5377;
+    }
+
+    /* ------ TRUST / IMAGE CARDS (modern, clean) ------ */
+    .trust-section {
+      padding: 80px 32px;
+      background: white;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 56px;
+    }
+
+    .section-header h2 {
+      font-size: 2.4rem;
+      color: #0a3a4f;
+      margin-bottom: 16px;
+    }
+
+    .section-header p {
+      color: #3d6c7c;
+      font-size: 1.1rem;
+    }
+
+    .card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px;
+    }
+
+    .trust-card {
+      background: white;
+      border-radius: 28px;
+      padding: 24px 24px 32px;
+      width: 300px;
+      box-shadow: 0 10px 30px -8px rgba(9, 70, 100, 0.08);
+      transition: all 0.25s;
+      border: 1px solid #dcf0fa;
+      text-align: center;
+    }
+
+    .trust-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 40px -12px #1b6d91;
+      border-color: #9fcde3;
+    }
+
+    .trust-card .icon-circle {
+      background: #d1ebf7;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 34px;
+      color: #0c6992;
+      transition: 0.2s;
+    }
+
+    .trust-card:hover .icon-circle {
+      background: #0f6e9c;
+      color: white;
+    }
+
+    .trust-card h3 {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+      color: #0a485f;
+    }
+
+    .trust-card p {
+      color: #346575;
+      line-height: 1.6;
+    }
+
+    /* ------ DOCTOR CARDS (with REAL doctor images) ------ */
+    .doctor-section {
+      background: linear-gradient(110deg, #f2f9ff, #ffffff);
+      padding: 80px 32px;
+      border-radius: 56px 56px 0 0;
+      margin-top: 20px;
+    }
+
+    .doctor-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 36px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .doctor-card {
+      background: white;
+      border-radius: 32px;
+      width: 280px;
+      padding: 28px 20px 32px;
+      box-shadow: 0 12px 28px -8px rgba(9, 67, 104, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: 0.2s;
+      border: 1px solid #e4f0f7;
+    }
+
+    .doctor-card:hover {
+      border-color: #7fc1db;
+      box-shadow: 0 24px 44px -12px #1b6b8f;
+    }
+
+    .doc-img {
+      width: 132px;
+      height: 132px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid white;
+      outline: 3px solid #b3dff0;
+      margin-bottom: 16px;
+      transition: 0.2s;
+    }
+
+    .doctor-card:hover .doc-img {
+      outline-color: #ffb156;
+    }
+
+    .doctor-card h3 {
+      font-size: 1.45rem;
+      color: #044b63;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .doctor-title {
+      font-weight: 700;
+      color: #0d6c8a;
+      background: #def0f7;
+      padding: 4px 16px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      letter-spacing: 0.6px;
+      margin-bottom: 12px;
+    }
+
+    .doctor-desc {
+      color: #2e586b;
+      font-size: 0.95rem;
+      margin: 6px 0;
+      text-align: center;
+    }
+
+    .exp-badge {
+      background: #fef7e7;
+      color: #7f6a2c;
+      padding: 5px 12px;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin: 12px 0 8px;
+    }
+
+    .btn-doctor {
+      background: #e9f2f9;
+      color: #0d5270;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-doctor i {
+      color: #0e7aa3;
+    }
+
+    .btn-doctor:hover {
+      background: #0f6e9c;
+      color: white;
+    }
+
+    .btn-doctor:hover i {
+      color: white;
+    }
+
+    /* ------ CTA BANNER (modern) ------ */
+    .cta-banner {
+      background: linear-gradient(105deg, #094c67, #0a6b8c);
+      border-radius: 48px;
+      padding: 56px 48px;
+      margin: 60px 32px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      box-shadow: 0 25px 35px -12px #0a455b;
+    }
+
+    .cta-text h2 {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .cta-text p {
+      font-size: 1.1rem;
+      opacity: 0.92;
+    }
+
+    .cta-btn {
+      background: #ffc857;
+      border: none;
+      padding: 16px 48px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #043b4e;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .cta-btn:hover {
+      background: #ffb433;
+      transform: scale(1.02);
+    }
+
+    /* ------ FOOTER (professional, detailed) ------ */
+    footer {
+      background: #0b2d3b;
+      color: #d1e7f0;
+      padding: 48px 40px 32px;
+      border-radius: 48px 48px 0 0;
+      margin-top: 40px;
+    }
+
+    .footer-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      max-width: 1300px;
+      margin: 0 auto;
+      gap: 40px;
+    }
+
+    .footer-about {
+      max-width: 300px;
+    }
+
+    .footer-about h3 {
+      color: white;
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 60px;
+    }
+
+    .footer-col p {
+      font-weight: 600;
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col li {
+      margin-bottom: 12px;
+    }
+
+    .footer-col a {
+      color: #bfe2f0;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .footer-col a:hover {
+      color: #ffc857;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #306277;
+      margin-top: 48px;
+      padding-top: 28px;
+      text-align: center;
+      color: #b2d3e0;
+      font-size: 0.9rem;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 900px) {
+      nav { flex-direction: column; gap: 16px; }
+      .nav-links { flex-wrap: wrap; justify-content: center; }
+      .hero-content h1 { font-size: 2.6rem; }
+      .cta-banner { flex-direction: column; text-align: center; gap: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ======== PROFESSIONAL NAVIGATION ======== -->
+  <nav>
+    <div class="nav-logo">
+      <i class="fas fa-stethoscope"></i>
+      <span>HealthCare</span>
+    </div>
+    <div class="nav-links">
+      <a href="#"><i class="fas fa-home"></i> Home</a>
+      <a href="#doctors"><i class="fas fa-user-md"></i> Doctors</a>
+      <a href="#services"><i class="fas fa-calendar-check"></i> Services</a>
+      <a href="about-us.html"><i class="fas fa-info-circle"></i> About</a>
+      <a href="register.html" class="nav-cta"><i class="fas fa-user-plus"></i> Register</a>
+    </div>
+  </nav>
+
+  <!-- ======== HERO SECTION – premium, trustworthy ======== -->
+  <header>
+    <div class="hero-grid">
+      <div class="hero-content">
+        <span class="hero-badge"><i class="fas fa-certificate"></i> India's #1 digital clinic</span>
+        <h1>
+          Expert doctors,<br>
+          <span class="hero-highlight">right at home.</span>
+        </h1>
+        <p>Consult top specialists from AIIMS, Medanta, Narayana & more. Video appointment within 15 minutes.</p>
+        <div class="btn-group">
+          <button class="btn-primary" onclick="window.location.href='register.html'">
+            <i class="fas fa-video"></i> Book free consult
+          </button>
+          <button class="btn-outline" onclick="window.location.href='#doctors'">
+            <i class="fas fa-chevron-circle-down"></i> View doctors
+          </button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <h3>150+</h3>
+            <p>Specialists</p>
+          </div>
+          <div class="stat-item">
+            <h3>2M+</h3>
+            <p>Patients</p>
+          </div>
+          <div class="stat-item">
+            <h3>4.9</h3>
+            <p>★★★★★</p>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="./health/prathap c reddy.jpg" alt="Professional doctor consulting online">
+      </div>
+    </div>
+  </header>
+
+  <!-- ======== TRUST INDICATORS / SERVICE CARDS ======== -->
+  <section class="trust-section" id="services">
+    <div class="section-header">
+      <h2>Why patients trust us</h2>
+      <p>Compassionate care · Verified doctors · Paperless prescriptions</p>
+    </div>
+    <div class="card-grid container">
+      <div class="trust-card">
+        <div class="icon-circle"><i class="fas fa-user-md"></i></div>
+        <h3>50+</h3>
+        <p>Top surgeons & physicians from India's premier institutes.</p>
+      </div>
+      <div class="trust-card">
+        <div class="icon-circle"><i class="fas fa-clock"></i></div>
+        <h3>Instant</h3>
+        <p>Average wait time under 10 minutes. 24/7 availability.</p>
+      </div>
+      <div class="trust-card">
+        <div class="icon-circle"><i class="fas fa-rupee-sign"></i></div>
+        <h3>Affordable</h3>
+        <p>Consultations starting at ₹199. Cashless insurance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== DOCTOR CARDS – INDIA'S RENOWNED EXPERTS WITH ACTUAL IMAGES ======== -->
+  <section class="doctor-section" id="doctors">
+    <div class="section-header">
+      <h2>Meet India’s top specialists</h2>
+      <p>Padma Shri, former AIIMS directors, WHO advisors — all available on HealthCare.</p>
+    </div>
+    <div class="doctor-grid">
+      <!-- Dr. Devi Shetty – Cardiac Surgeon, Founder Narayana Health -->
+      <div class="doctor-card">
+        <img class="doc-img" src="./health/download.jpg" alt="Dr. Devi Shetty">
+        <h3>Dr. Devi Shetty</h3>
+        <span class="doctor-title">CARDIAC SURGERY</span>
+        <p class="doctor-desc">Founder, Narayana Health · 40k+ surgeries</p>
+        <span class="exp-badge"><i class="far fa-clock"></i> 35+ years</span>
+        <button class="btn-doctor" onclick="viewProfile('DeviShetty')"><i class="fas fa-arrow-right"></i> View full profile</button>
+      </div>
+      <!-- Dr. Naresh Trehan – Cardiothoracic Surgeon, Chairman Medanta -->
+      <div class="doctor-card">
+        <img class="doc-img" src="./health/doctor trehan.jpg" alt="Dr. Naresh Trehan">
+        <h3>Dr. Naresh Trehan</h3>
+        <span class="doctor-title">CARDIOTHORACIC</span>
+        <p class="doctor-desc">Chairman, Medanta · Pioneer in robotic heart</p>
+        <span class="exp-badge"><i class="far fa-clock"></i> 40+ years</span>
+        <button class="btn-doctor" onclick="viewProfile('NareshTrehan')"><i class="fas fa-arrow-right"></i> View full profile</button>
+      </div>
+      <!-- Dr. Randeep Guleria – Pulmonologist, Ex-Director AIIMS Delhi -->
+      <div class="doctor-card">
+        <img class="doc-img" src="./health/randeep guleria.jpg" alt="Dr. Randeep Guleria">
+        <h3>Dr. Randeep Guleria</h3>
+        <span class="doctor-title">PULMONOLOGY</span>
+        <p class="doctor-desc">Ex-Director AIIMS Delhi · COVID taskforce lead</p>
+        <span class="exp-badge"><i class="far fa-clock"></i> 30+ years</span>
+        <button class="btn-doctor" onclick="viewProfile('RandeepGuleria')"><i class="fas fa-arrow-right"></i> View full profile</button>
+      </div>
+      <!-- Dr. Soumya Swaminathan – Pediatrician, Ex-Chief Scientist WHO -->
+      <div class="doctor-card">
+        <img class="doc-img" src="./health/soumya swaminathan.jpg" alt="Dr. Soumya Swaminathan">
+        <h3>Dr. Soumya Swaminathan</h3>
+        <span class="doctor-title">PEDIATRICS / RESEARCH</span>
+        <p class="doctor-desc">Ex-Chief Scientist, WHO · global health</p>
+        <span class="exp-badge"><i class="far fa-clock"></i> 35+ years</span>
+        <button class="btn-doctor" onclick="viewProfile('SoumyaSwaminathan')"><i class="fas fa-arrow-right"></i> View full profile</button>
+      </div>
+      <!-- Dr. Sanjiv Kaul – Cardiologist, OHSU Knight Institute -->
+      <div class="doctor-card">
+        <img class="doc-img" src="./health/sanjiv kaul.jpg" alt="Dr. Sanjiv Kaul">
+        <h3>Dr. Sanjiv Kaul</h3>
+        <span class="doctor-title">CARDIOLOGY</span>
+        <p class="doctor-desc">OHSU Knight Institute · imaging innovation</p>
+        <span class="exp-badge"><i class="far fa-clock"></i> 25+ years</span>
+        <button class="btn-doctor" onclick="viewProfile('SanjivKaul')"><i class="fas fa-arrow-right"></i> View full profile</button>
+      </div>
+      <!-- Dr. Prathap C. Reddy – Founder, Apollo Hospitals -->
+      <div class="doctor-card">
+        <img class="doc-img" src="./health/prathap c reddy.jpg" alt="Dr. Prathap C Reddy">
+        <h3>Dr. Prathap C. Reddy</h3>
+        <span class="doctor-title">FOUNDER, APOLLO</span>
+        <p class="doctor-desc">Healthcare visionary · Padma Vibhushan</p>
+        <span class="exp-badge"><i class="far fa-clock"></i> 40+ years</span>
+        <button class="btn-doctor" onclick="viewProfile('PrathapReddy')"><i class="fas fa-arrow-right"></i> View full profile</button>
+      </div>
+      <!-- Additional doctor: Dr. Suneeta Reddy – Managing Director, Apollo (image available) -->
+      <div class="doctor-card">
+        <img class="doc-img" src="./health/suneeta reddy.jpg" alt="Dr. Suneeta Reddy">
+        <h3>Dr. Suneeta Reddy</h3>
+        <span class="doctor-title">HEALTHCARE STRATEGY</span>
+        <p class="doctor-desc">MD, Apollo Hospitals · Global leader</p>
+        <span class="exp-badge"><i class="far fa-clock"></i> 30+ years</span>
+        <button class="btn-doctor" onclick="viewProfile('SuneetaReddy')"><i class="fas fa-arrow-right"></i> View full profile</button>
+      </div>
+      <!-- Dr. V. Mohan – Renowned Diabetologist, Dr. Mohan's Diabetes -->
+      <div class="doctor-card">
+        <img class="doc-img" src="./health/v mohan.jpg" alt="Dr. V. Mohan">
+        <h3>Dr. V. Mohan</h3>
+        <span class="doctor-title">DIABETOLOGY</span>
+        <p class="doctor-desc">Chairman, Dr. Mohan's Diabetes · Padma Shri</p>
+        <span class="exp-badge"><i class="far fa-clock"></i> 35+ years</span>
+        <button class="btn-doctor" onclick="viewProfile('VMohan')"><i class="fas fa-arrow-right"></i> View full profile</button>
+      </div>
+    </div>
+    <div style="text-align: center; margin-top: 56px;">
+      <button class="btn-primary" onclick="window.location.href='doctors.html'" style="background: #0a4f63;">
+        <i class="fas fa-search"></i> Browse all 150+ doctors
+      </button>
+    </div>
+  </section>
+
+  <!-- ======== CONVERSION BANNER (BOOK APPOINTMENT) ======== -->
+  <div class="cta-banner">
+    <div class="cta-text">
+      <h2>Need a doctor now?</h2>
+      <p>Consult within 15 minutes. Register once, get lifetime access.</p>
+    </div>
+    <button class="cta-btn" onclick="window.location.href='register.html'">
+      <i class="fas fa-calendar-plus"></i> Book instant appointment
+    </button>
+  </div>
+
+  <!-- ======== PROFESSIONAL FOOTER ======== -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-about">
+        <h3><i class="fas fa-stethoscope" style="margin-right: 6px;"></i> HealthCare</h3>
+        <p style="color: #c6e0eb; margin-bottom: 20px;">India’s most trusted telemedicine platform. NABH-accredited, 4.9★ patient rating.</p>
+        <i class="fab fa-facebook" style="margin-right: 18px; font-size: 1.4rem;"></i>
+        <i class="fab fa-twitter" style="margin-right: 18px; font-size: 1.4rem;"></i>
+        <i class="fab fa-linkedin" style="font-size: 1.4rem;"></i>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <p>Patients</p>
+          <ul>
+            <li><a href="#">Find a doctor</a></li>
+            <li><a href="#">Book video consult</a></li>
+            <li><a href="#">Health records</a></li>
+            <li><a href="#">Medicines home</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <p>Doctors</p>
+          <ul>
+            <li><a href="#">Partner with us</a></li>
+            <li><a href="#">Login for doctors</a></li>
+            <li><a href="#">Telemedicine toolkit</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <p>Company</p>
+          <ul>
+            <li><a href="about-us.html">About us</a></li>
+            <li><a href="contact-us.html">Contact</a></li>
+            <li><a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <span id="year"></span> Health Care (India) Pvt. Ltd. All rights reserved. | <a href="#" style="color: #b0e0f0;">Terms</a> | <a href="#" style="color: #b0e0f0;">Sitemap</a></p>
+      <p style="margin-top: 8px;">Emergency: 108 (24/7) ·  <i class="fas fa-envelope"></i> support@healthcare.in</p>
+    </div>
+  </footer>
+
+  <script>
+    // dynamic copyright year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Profile viewer — professional redirection (profile.html will receive param)
+    function viewProfile(doctorName) {
+      // encode for safety
+      window.location.href = `profile.html?doctor=${encodeURIComponent(doctorName)}`;
+    }
+  </script>
+</body>
+</html>

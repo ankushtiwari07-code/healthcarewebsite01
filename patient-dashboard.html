@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Dashboard | HealthCare+</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{
+  font-family:Poppins;
+  margin:0;
+  padding:0;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:linear-gradient(135deg,#1976d2,#0d47a1);
+  transition:0.3s ease;
+  color:#fff;
+}
+.dark{
+  background:linear-gradient(135deg,#121212,#1e1e1e);
+}
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px;
+  background:rgba(0,0,0,0.2);
+}
+header h1{margin:0;font-size:24px;}
+header button{
+  padding:8px 14px;
+  border-radius:20px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+}
+main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:20px;
+}
+
+/* CARDS */
+.patient-card, .appointment-card, .doctor-card{
+  background:rgba(255,255,255,0.9);
+  color:#000;
+  border-radius:16px;
+  padding:20px;
+  width:100%;
+  max-width:400px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  margin-top:20px;
+  transition:0.3s ease;
+}
+.dark .patient-card, .dark .appointment-card, .dark .doctor-card{
+  background:#2c2c2c;
+  color:#fff;
+}
+.patient-card h2, .appointment-card h3, .doctor-card h3{
+  margin:0 0 10px 0;
+  font-size:22px;
+  color:#1976d2;
+}
+.patient-card p, .appointment-card p, .doctor-card p{
+  margin:6px 0;
+  font-size:16px;
+}
+
+/* APPOINTMENT FORM */
+form{
+  background:rgba(255,255,255,0.9);
+  color:#000;
+  border-radius:16px;
+  padding:20px;
+  width:100%;
+  max-width:400px;
+  margin-top:20px;
+}
+.dark form{background:#2c2c2c;color:#fff;}
+form input, form select, form button{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+form button{
+  background:#1976d2;
+  color:#fff;
+  font-weight:600;
+  border:none;
+  cursor:pointer;
+}
+
+/* APPOINTMENT BUTTONS */
+.appointment-card button{
+  margin-right:10px;
+  padding:6px 12px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+.appointment-card button.cancel{background:#f44336;color:#fff;}
+.appointment-card button.reschedule{background:#4CAF50;color:#fff;}
+.appointment-card button.save{background:#1976d2;color:#fff;}
+.appointment-card button.cancelEdit{background:#9e9e9e;color:#fff;}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#333;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:8px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:0.4s ease;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.success{background:#4CAF50;}
+.toast.error{background:#f44336;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Patient Dashboard</h1>
+  <div>
+    <button id="darkToggle">🌙 Dark Mode</button>
+    <button id="logoutBtn">Logout</button>
+  </div>
+</header>
+
+<main>
+  <p id="welcomeMsg">Welcome, Patient</p>
+
+  <!-- PATIENT CARD -->
+  <div class="patient-card" id="patientCard">
+    <h2 id="p_name">Patient Name</h2>
+    <p><strong>Email:</strong> <span id="p_email"></span></p>
+    <p><strong>Role:</strong> <span id="p_role"></span></p>
+  </div>
+
+  <!-- VIEW DOCTORS BUTTON -->
+  <button id="viewDoctorsBtn" style="margin-top:20px; padding:10px 20px; border-radius:8px; border:none; background:#1976d2; color:#fff; font-weight:600; cursor:pointer;">View Doctors</button>
+  <link href="view-doctors.html"
+  <!-- DOCTORS LIST -->
+  <div id="doctorsList" style="width:100%; max-width:400px;"></div>
+
+  <!-- APPOINTMENT FORM -->
+  <form id="appointmentForm">
+    <h3>Book Appointment</h3>
+    <input type="date" id="appt_date" required>
+    <input type="time" id="appt_time" required>
+    <select id="appt_doctor" required>
+      <option value="">Select Doctor</option>
+    </select>
+    <button type="submit">Book Appointment</button>
+  </form>
+
+  <!-- UPCOMING APPOINTMENTS -->
+  <div id="appointmentsList"></div>
+
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// CHECK LOGIN
+const user = JSON.parse(localStorage.getItem("loggedInUser"));
+if(!user || user.role !== "patient"){window.location.href = "index.html";}
+
+// WELCOME MESSAGE
+document.getElementById("welcomeMsg").innerText = `Welcome, ${user.name}!`;
+
+// PATIENT CARD
+document.getElementById("p_name").innerText = user.name;
+document.getElementById("p_email").innerText = user.email;
+document.getElementById("p_role").innerText = user.role.charAt(0).toUpperCase()+user.role.slice(1);
+
+// DARK MODE
+const darkBtn = document.getElementById("darkToggle");
+if(localStorage.getItem("darkMode")==="enabled"){document.body.classList.add("dark"); darkBtn.innerText="☀ Light Mode";}
+darkBtn.addEventListener("click",()=>{
+  document.body.classList.toggle("dark");
+  if(document.body.classList.contains("dark")){localStorage.setItem("darkMode","enabled"); darkBtn.innerText="☀ Light Mode";}
+  else{localStorage.setItem("darkMode","disabled"); darkBtn.innerText="🌙 Dark Mode";}
+});
+
+// LOGOUT
+document.getElementById("logoutBtn").addEventListener("click",()=>{
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "index.html";
+});
+
+// TOAST
+function showToast(msg,type="success"){const t=document.getElementById("toast");t.innerText=msg;t.className="toast show "+type;setTimeout(()=>{t.className="toast";},3000);}
+
+// LOAD DOCTORS
+function loadDoctors(){
+  const users=JSON.parse(localStorage.getItem("healthcare_users"))||[];
+  const doctors=users.filter(u=>u.role==="doctor");
+  const select=document.getElementById("appt_doctor");
+  select.innerHTML='<option value="">Select Doctor</option>'; 
+  doctors.forEach(d=>{
+    const opt=document.createElement("option");
+    opt.value=d.name;
+    opt.textContent=d.name;
+    select.appendChild(opt);
+  });
+}
+loadDoctors();
+
+
+// TOAST NOTIFICATION
+function showToast(msg,type="success"){
+  const t = document.getElementById("toast");
+  t.innerText = msg;
+  t.className = "toast show " + type;
+  setTimeout(()=>{ t.className = "toast"; }, 3000);
+}
+
+// LOAD DOCTORS DROPDOWN
+function loadDoctorsDropdown(){
+  const users = JSON.parse(localStorage.getItem("healthcare_users")) || [];
+  const doctors = users.filter(u => u.role === "doctor");
+  const select = document.getElementById("appt_doctor");
+  select.innerHTML = '<option value="">Select Doctor</option>';
+  doctors.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d.name;
+    opt.textContent = d.name;
+    select.appendChild(opt);
+  });
+}
+loadDoctorsDropdown();
+
+// VIEW DOCTORS BUTTON
+document.getElementById("viewDoctorsBtn").addEventListener("click", () => {
+  const listDiv = document.getElementById("doctorsList");
+  listDiv.innerHTML = "";
+  const users = JSON.parse(localStorage.getItem("healthcare_users")) || [];
+  const doctors = users.filter(u => u.role === "doctor");
+  if(doctors.length === 0){
+    showToast("No doctors available","error");
+    return;
+  }
+  doctors.forEach(d => {
+    const card = document.createElement("div");
+    card.className = "doctor-card";
+    card.innerHTML = `
+      <h3>Dr. ${d.name}</h3>
+      <p><strong>Email:</strong> ${d.email}</p>
+      <p>Click to select for appointment</p>
+    `;
+    card.addEventListener("click", () => {
+      document.getElementById("appt_doctor").value = d.name;
+      showToast(`Dr. ${d.name} selected`,"success");
+      card.scrollIntoView({behavior:"smooth"});
+    });
+    listDiv.appendChild(card);
+  });
+});
+
+// BOOK APPOINTMENT
+document.getElementById("appointmentForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const date = document.getElementById("appt_date").value;
+  const time = document.getElementById("appt_time").value;
+  const doctor = document.getElementById("appt_doctor").value;
+  if(!date || !time || !doctor){ showToast("Fill all fields","error"); return; }
+
+  const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+  appointments.push({ patient: user.name, email: user.email, doctor, date, time, status: "Pending" });
+  localStorage.setItem("appointments", JSON.stringify(appointments));
+  showToast("Appointment booked","success");
+  document.getElementById("appointmentForm").reset();
+  displayAppointments();
+});
+
+// DISPLAY PATIENT APPOINTMENTS
+function displayAppointments(){
+  const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+  const list = document.getElementById("appointmentsList");
+  list.innerHTML = "";
+  const myAppts = appointments.filter(a => a.email === user.email);
+
+  if(myAppts.length === 0){
+    list.innerHTML = "<p>No appointments yet.</p>";
+    return;
+  }
+
+  myAppts.forEach(a => {
+    const card = document.createElement("div");
+    card.className = "appointment-card";
+    const statusText = a.status ? a.status : "Pending";
+    card.innerHTML = `
+      <h3>Appointment with Dr. ${a.doctor}</h3>
+      <p><strong>Date:</strong> ${a.date}</p>
+      <p><strong>Time:</strong> ${a.time}</p>
+      <p><strong>Status:</strong> ${statusText}</p>
+      <button class="reschedule">Reschedule</button>
+      <button class="cancel">Cancel</button>
+    `;
+
+    // CANCEL APPOINTMENT
+    card.querySelector(".cancel").addEventListener("click", () => {
+      if(confirm("Are you sure to cancel this appointment?")){
+        const idx = appointments.indexOf(a);
+        appointments.splice(idx,1);
+        localStorage.setItem("appointments",JSON.stringify(appointments));
+        showToast("Appointment canceled","error");
+        displayAppointments();
+      }
+    });
+
+    // RESCHEDULE INLINE FORM
+    card.querySelector(".reschedule").addEventListener("click", () => {
+      card.innerHTML = `
+        <h3>Reschedule Appointment with Dr. ${a.doctor}</h3>
+        <input type="date" value="${a.date}" class="edit_date">
+        <input type="time" value="${a.time}" class="edit_time">
+        <button class="save">Save</button>
+        <button class="cancelEdit">Cancel</button>
+      `;
+      card.querySelector(".save").addEventListener("click", () => {
+        const newDate = card.querySelector(".edit_date").value;
+        const newTime = card.querySelector(".edit_time").value;
+        if(!newDate || !newTime){ showToast("Fill both fields","error"); return; }
+        a.date = newDate;
+        a.time = newTime;
+        a.status = "Pending"; // reset status after reschedule
+        localStorage.setItem("appointments", JSON.stringify(appointments));
+        showToast("Appointment rescheduled","success");
+        displayAppointments();
+      });
+      card.querySelector(".cancelEdit").addEventListener("click", () => displayAppointments());
+    });
+
+    list.appendChild(card);
+  });
+}
+
+displayAppointments();
+
+
+// DISPLAY DOCTORS LIST
+document.getElementById("viewDoctorsBtn").addEventListener("click",()=>{
+  const listDiv=document.getElementById("doctorsList");
+  listDiv.innerHTML="";
+  const users=JSON.parse(localStorage.getItem("healthcare_users"))||[];
+  const doctors=users.filter(u=>u.role==="doctor");
+  if(doctors.length===0){showToast("No doctors available","error"); return;}
+  doctors.forEach(d=>{
+    const card=document.createElement("div");
+    card.className="doctor-card";
+    card.innerHTML=`<h3>Dr. ${d.name}</h3>
+                    <p><strong>Email:</strong> ${d.email}</p>
+                    <p>Click to select for appointment</p>`;
+    card.addEventListener("click",()=>{
+      document.getElementById("appt_doctor").value=d.name;
+      showToast(`Dr. ${d.name} selected`);
+      card.scrollIntoView({behavior:"smooth"});
+    });
+    listDiv.appendChild(card);
+  });
+});
+
+// BOOK APPOINTMENT
+document.getElementById("appointmentForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  const date=document.getElementById("appt_date").value;
+  const time=document.getElementById("appt_time").value;
+  const doctor=document.getElementById("appt_doctor").value;
+  if(!date||!time||!doctor){showToast("Fill all fields","error");return;}
+  const appointments=JSON.parse(localStorage.getItem("appointments"))||[];
+  appointments.push({patient:user.name,email:user.email,doctor,date,time,status:"Pending"});
+  localStorage.setItem("appointments",JSON.stringify(appointments));
+  showToast("Appointment booked");
+  document.getElementById("appointmentForm").reset();
+  displayAppointments();
+});
+
+// DISPLAY PATIENT APPOINTMENTS
+function displayAppointments(){
+  const appointments=JSON.parse(localStorage.getItem("appointments"))||[];
+  const list=document.getElementById("appointmentsList");
+  list.innerHTML="";
+  const myAppts=appointments.filter(a=>a.email===user.email);
+  myAppts.forEach((a,index)=>{
+    const card=document.createElement("div");
+    card.className="appointment-card";
+    const statusText = a.status ? a.status : "Pending";
+    card.innerHTML=`<h3>Appointment with Dr. ${a.doctor}</h3>
+                    <p><strong>Date:</strong> ${a.date}</p>
+                    <p><strong>Time:</strong> ${a.time}</p>
+                    <p><strong>Status:</strong> ${statusText}</p>
+                    <button class="reschedule">Reschedule</button>
+                    <button class="cancel">Cancel</button>`;
+    // CANCEL
+    card.querySelector(".cancel").addEventListener("click",()=>{
+      if(confirm("Are you sure to cancel this appointment?")){
+        appointments.splice(appointments.indexOf(a),1);
+        localStorage.setItem("appointments",JSON.stringify(appointments));
+        showToast("Appointment canceled","error");
+        displayAppointments();
+      }
+    });
+    // RESCHEDULE INLINE FORM
+    card.querySelector(".reschedule").addEventListener("click",()=>{
+      card.innerHTML=`<h3>Reschedule Appointment with Dr. ${a.doctor}</h3>
+        <input type="date" value="${a.date}" class="edit_date">
+        <input type="time" value="${a.time}" class="edit_time">
+        <button class="save">Save</button>
+        <button class="cancelEdit">Cancel</button>`;
+      card.querySelector(".save").addEventListener("click",()=>{
+        const newDate = card.querySelector(".edit_date").value;
+        const newTime = card.querySelector(".edit_time").value;
+        if(!newDate||!newTime){showToast("Fill both fields","error"); return;}
+        a.date=newDate; a.time=newTime; a.status="Pending"; // reset status
+        localStorage.setItem("appointments",JSON.stringify(appointments));
+        showToast("Appointment rescheduled","success");
+        displayAppointments();
+      });
+      card.querySelector(".cancelEdit").addEventListener("click",()=>displayAppointments());
+    });
+    list.appendChild(card);
+  });
+}
+displayAppointments();
+// =====================
+// PATIENT DASHBOARD JS
+// =====================
+
+// CHECK LOGIN
+const User = JSON.parse(localStorage.getItem("loggedInUser"));
+if(!user || user.role !== "patient"){ window.location.href = "index.html"; }
+
+// WELCOME MESSAGE
+document.getElementById("welcomeMsg").innerText = `Welcome, ${user.name}!`;
+
+// PATIENT CARD
+document.getElementById("p_name").innerText = user.name;
+document.getElementById("p_email").innerText = user.email;
+document.getElementById("p_role").innerText = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+
+// DARK MODE
+const darkbtn = document.getElementById("darkToggle");
+if(localStorage.getItem("darkMode") === "enabled"){ 
+  document.body.classList.add("dark"); 
+  darkBtn.innerText = "☀ Light Mode";
+}
+darkBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  if(document.body.classList.contains("dark")){
+    localStorage.setItem("darkMode","enabled");
+    darkBtn.innerText = "☀ Light Mode";
+  } else {
+    localStorage.setItem("darkMode","disabled");
+    darkBtn.innerText = "🌙 Dark Mode";
+  }
+});
+
+// LOGOUT
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "index.html";
+});
+
+// TOAST NOTIFICATION
+function showToast(msg,type="success"){
+  const t = document.getElementById("toast");
+  t.innerText = msg;
+  t.className = "toast show " + type;
+  setTimeout(()=>{ t.className = "toast"; }, 3000);
+}
+
+// LOAD DOCTORS DROPDOWN
+function loadDoctorsDropdown(){
+  const users = JSON.parse(localStorage.getItem("healthcare_users")) || [];
+  const doctors = users.filter(u => u.role === "doctor");
+  const select = document.getElementById("appt_doctor");
+  select.innerHTML = '<option value="">Select Doctor</option>';
+  doctors.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d.name;
+    opt.textContent = d.name;
+    select.appendChild(opt);
+  });
+}
+loadDoctorsDropdown();
+
+// VIEW DOCTORS BUTTON
+document.getElementById("viewDoctorsBtn").addEventListener("click", () => {
+  const listDiv = document.getElementById("doctorsList");
+  listDiv.innerHTML = "";
+  const users = JSON.parse(localStorage.getItem("healthcare_users")) || [];
+  const doctors = users.filter(u => u.role === "doctor");
+  if(doctors.length === 0){
+    showToast("No doctors available","error");
+    return;
+  }
+  doctors.forEach(d => {
+    const card = document.createElement("div");
+    card.className = "doctor-card";
+    card.innerHTML = `
+      <h3>Dr. ${d.name}</h3>
+      <p><strong>Email:</strong> ${d.email}</p>
+      <p>Click to select for appointment</p>
+    `;
+    card.addEventListener("click", () => {
+      document.getElementById("appt_doctor").value = d.name;
+      showToast(`Dr. ${d.name} selected`,"success");
+      card.scrollIntoView({behavior:"smooth"});
+    });
+    listDiv.appendChild(card);
+  });
+});
+
+// BOOK APPOINTMENT
+document.getElementById("appointmentForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const date = document.getElementById("appt_date").value;
+  const time = document.getElementById("appt_time").value;
+  const doctor = document.getElementById("appt_doctor").value;
+  if(!date || !time || !doctor){ showToast("Fill all fields","error"); return; }
+
+  const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+  appointments.push({ patient: user.name, email: user.email, doctor, date, time, status: "Pending" });
+  localStorage.setItem("appointments", JSON.stringify(appointments));
+  showToast("Appointment booked","success");
+  document.getElementById("appointmentForm").reset();
+  displayAppointments();
+});
+
+// DISPLAY PATIENT APPOINTMENTS
+function displayAppointments(){
+  const appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+  const list = document.getElementById("appointmentsList");
+  list.innerHTML = "";
+  const myAppts = appointments.filter(a => a.email === user.email);
+
+  if(myAppts.length === 0){
+    list.innerHTML = "<p>No appointments yet.</p>";
+    return;
+  }
+
+  myAppts.forEach(a => {
+    const card = document.createElement("div");
+    card.className = "appointment-card";
+    const statusText = a.status ? a.status : "Pending";
+    card.innerHTML = `
+      <h3>Appointment with Dr. ${a.doctor}</h3>
+      <p><strong>Date:</strong> ${a.date}</p>
+      <p><strong>Time:</strong> ${a.time}</p>
+      <p><strong>Status:</strong> ${statusText}</p>
+      <button class="reschedule">Reschedule</button>
+      <button class="cancel">Cancel</button>
+    `;
+
+    // CANCEL APPOINTMENT
+    card.querySelector(".cancel").addEventListener("click", () => {
+      if(confirm("Are you sure to cancel this appointment?")){
+        const idx = appointments.indexOf(a);
+        appointments.splice(idx,1);
+        localStorage.setItem("appointments",JSON.stringify(appointments));
+        showToast("Appointment canceled","error");
+        displayAppointments();
+      }
+    });
+
+    // RESCHEDULE INLINE FORM
+    card.querySelector(".reschedule").addEventListener("click", () => {
+      card.innerHTML = `
+        <h3>Reschedule Appointment with Dr. ${a.doctor}</h3>
+        <input type="date" value="${a.date}" class="edit_date">
+        <input type="time" value="${a.time}" class="edit_time">
+        <button class="save">Save</button>
+        <button class="cancelEdit">Cancel</button>
+      `;
+      card.querySelector(".save").addEventListener("click", () => {
+        const newDate = card.querySelector(".edit_date").value;
+        const newTime = card.querySelector(".edit_time").value;
+        if(!newDate || !newTime){ showToast("Fill both fields","error"); return; }
+        a.date = newDate;
+        a.time = newTime;
+        a.status = "Pending"; // reset status after reschedule
+        localStorage.setItem("appointments", JSON.stringify(appointments));
+        showToast("Appointment rescheduled","success");
+        displayAppointments();
+      });
+      card.querySelector(".cancelEdit").addEventListener("click", () => displayAppointments());
+    });
+
+    list.appendChild(card);
+  });
+}
+
+displayAppointments();
+
+</script>
+</body>
+</html>

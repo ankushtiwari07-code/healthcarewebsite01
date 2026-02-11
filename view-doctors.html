@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HealthCare | Find Doctors & Appointments</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --primary:#1976d2;
+  --dark:#0d47a1;
+  --light:#f5f9ff;
+  --text:#333;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:var(--light);
+  color:var(--text);
+}
+
+/* ===== HEADER ===== */
+header{
+  background:#fff;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+.nav{
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 20px;
+}
+.logo{
+  font-size:22px;
+  font-weight:700;
+  color:var(--primary);
+}
+.nav a{
+  margin-left:20px;
+  text-decoration:none;
+  color:#555;
+  font-weight:500;
+}
+.nav a:hover{color:var(--primary)}
+
+/* ===== HERO ===== */
+.hero{
+  background:linear-gradient(135deg,#e3f2fd,#bbdefb);
+  padding:60px 20px;
+}
+.hero-content{
+  max-width:1200px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:40px;
+  align-items:center;
+}
+.hero h1{
+  font-size:38px;
+  color:var(--dark);
+}
+.hero p{
+  font-size:16px;
+  margin:15px 0 25px;
+}
+
+/* ===== FILTER ===== */
+.filter-box{
+  background:#fff;
+  padding:25px;
+  border-radius:14px;
+  box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+select,button,input{
+  width:100%;
+  padding:12px;
+  margin-top:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+button{
+  background:var(--primary);
+  color:#fff;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+}
+button:hover{background:var(--dark)}
+
+/* ===== MAIN ===== */
+.container{
+  max-width:1200px;
+  margin:50px auto;
+  padding:0 20px;
+  display:grid;
+  grid-template-columns:2.2fr 1fr;
+  gap:30px;
+}
+
+/* ===== DOCTORS ===== */
+.doctor-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:20px;
+}
+.doctor-card{
+  background:#fff;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 4px 15px rgba(0,0,0,.1);
+  text-align:center;
+}
+.doctor-card img{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+}
+.doctor-card h3{margin:10px 0 5px}
+.doctor-card p{margin:4px 0;color:#666}
+
+/* ===== BOOKING ===== */
+.panel{
+  background:#fff;
+  padding:25px;
+  border-radius:14px;
+  box-shadow:0 4px 15px rgba(0,0,0,.1);
+}
+.hidden{display:none}
+
+/* ===== APPOINTMENTS ===== */
+.appointment{
+  background:#f1f8ff;
+  padding:12px;
+  border-radius:8px;
+  margin-top:12px;
+}
+
+/* ===== FOOTER ===== */
+footer{
+  background:#fff;
+  text-align:center;
+  padding:15px;
+  margin-top:50px;
+  font-size:14px;
+  color:#777;
+}
+
+@media(max-width:900px){
+  .hero-content,.container{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="nav">
+    <div class="logo">HealthCare+</div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Doctors</a>
+      <a href="#">Appointments</a>
+      <a href="#">Profile</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div>
+      <h1>Book Appointments with Trusted Doctors</h1>
+      <p>Find experienced specialists near you and book appointments instantly with our secure healthcare platform.</p>
+    </div>
+
+    <div class="filter-box">
+      <h3>Find a Doctor</h3>
+      <select id="specialty">
+        <option value="">Select Specialty</option>
+        <option>Cardiology</option>
+        <option>Neurology</option>
+        <option>Gynecology</option>
+        <option>Dermatology</option>
+      </select>
+      <select id="city">
+        <option value="">Select City</option>
+        <option>Lucknow</option>
+        <option>Kanpur</option>
+        <option>Noida</option>
+      </select>
+      <button onclick="findDoctors()">Search</button>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<section class="container">
+
+  <!-- DOCTORS -->
+  <div>
+    <h2>Available Doctors</h2>
+    <div class="doctor-grid" id="doctorList"></div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="panel hidden" id="bookingPanel">
+    <h3>Book Appointment</h3>
+    <p id="docInfo"></p>
+
+    <input id="patientName" readonly>
+    <input type="date" id="appointmentDate">
+
+    <select id="timeSlot"></select>
+    <button onclick="confirmBooking()">Confirm Booking</button>
+
+    <hr style="margin:20px 0">
+
+    <h4>My Appointments</h4>
+    <div id="myAppointments"></div>
+  </div>
+
+</section>
+
+<footer>© 2026 HealthCare+. All rights reserved.</footer>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+const user = JSON.parse(localStorage.getItem("currentUser"));
+if(!user){
+  window.location.href = "login.html";
+  return;
+}
+
+// Create doctors once
+if(!localStorage.getItem("doctors")){
+  const doctors = [
+    {id:1, name:"Dr. Sharma", specialization:"Cardiologist"},
+    {id:2, name:"Dr. Mehta", specialization:"Dermatologist"},
+    {id:3, name:"Dr. Singh", specialization:"Neurologist"},
+    {id:4, name:"Dr. Khan", specialization:"Orthopedic"},
+    {id:5, name:"Dr. Verma", specialization:"Pediatrician"}
+  ];
+  localStorage.setItem("doctors", JSON.stringify(doctors));
+}
+
+const doctors = JSON.parse(localStorage.getItem("doctors"));
+const ratings = JSON.parse(localStorage.getItem("doctorRatings")) || {};
+const container = document.getElementById("doctorList");
+
+function getAverage(name){
+  if(!ratings[name]) return "No Ratings";
+  const total = ratings[name].reduce((a,b)=>a+b,0);
+  return (total/ratings[name].length).toFixed(1) + " ⭐";
+}
+
+doctors.forEach(doc=>{
+  container.innerHTML += `
+    <div style="background:#fff;padding:20px;margin:15px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,.1)">
+      <h3>${doc.name}</h3>
+      <p>${doc.specialization}</p>
+      <p>Rating: ${getAverage(doc.name)}</p>
+      <button onclick="bookAppointment('${doc.name}')">Book</button>
+    </div>
+  `;
+});
+
+});
+
+function bookAppointment(doctorName){
+
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const date = prompt("Enter Date (YYYY-MM-DD)");
+  const time = prompt("Enter Time (HH:MM)");
+
+  if(!date || !time) return;
+
+  const key = "appointments_" + user.email;
+  let appointments = JSON.parse(localStorage.getItem(key)) || [];
+
+  appointments.push({
+    doctor: doctorName,
+    date: date,
+    time: time
+  });
+
+  localStorage.setItem(key, JSON.stringify(appointments));
+
+  alert("Appointment Booked Successfully!");
+  window.location.href = "patient-dashboard.html";
+}
+</script>
+</body>
+</html>
+
+
+

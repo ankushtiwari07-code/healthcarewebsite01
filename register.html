@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HealthCare+ | Auth</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:Poppins;
+  background:linear-gradient(135deg,#1976d2,#0d47a1);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition:0.3s ease;
+}
+.box{
+  background:#fff;
+  width:100%;
+  max-width:420px;
+  padding:30px;
+  border-radius:16px;
+  box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+h2{text-align:center;color:#1976d2}
+input,select,button{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+button{
+  background:#1976d2;
+  color:#fff;
+  font-weight:600;
+  border:none;
+  cursor:pointer;
+}
+.hidden{display:none}
+.toggle{
+  text-align:center;
+  color:#1976d2;
+  cursor:pointer;
+  font-size:14px;
+}
+.password-wrapper{position:relative;}
+.password-wrapper input{padding-right:45px;}
+.toggle-eye{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  font-size:13px;
+  color:#555;
+}
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#333;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:8px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:0.4s ease;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.success{background:#4CAF50;}
+.toast.error{background:#f44336;}
+
+/* DARK MODE */
+.dark{
+  background:linear-gradient(135deg,#121212,#1e1e1e);
+}
+.dark .box{background:#1f1f1f;color:#fff;}
+.dark input,.dark select{background:#2c2c2c;color:#fff;border:1px solid #444;}
+.dark button{background:#333;}
+.dark .toggle{color:#90caf9;}
+</style>
+</head>
+
+<body>
+
+<!-- DARK MODE TOGGLE -->
+<button id="darkToggle" style="position:fixed; top:20px; right:20px; padding:8px 14px; border-radius:20px;">🌙 Dark Mode</button>
+
+<div class="box">
+
+<!-- REGISTER -->
+<div id="registerBox">
+<h2>Register</h2>
+<input id="r_name" placeholder="Full Name">
+<input id="r_email" type="email" placeholder="Email">
+
+<div class="password-wrapper">
+<input id="r_password" type="password" placeholder="Password">
+<span class="toggle-eye" onclick="togglePassword('r_password',this)">Show</span>
+</div>
+<div id="strengthMsg" style="font-size:13px;"></div>
+
+<select id="r_role">
+<option value="">Select Role</option>
+<option value="patient">Patient</option>
+<option value="doctor">Doctor</option>
+</select>
+
+<button onclick="sendOTP()">Send OTP</button>
+<div class="toggle" onclick="showLogin()">Already registered? Login</div>
+</div>
+
+<!-- OTP VERIFY -->
+<div id="otpBox" class="hidden">
+<h2>Email Verification</h2>
+<input id="otpInput" placeholder="Enter OTP">
+<p id="otpTimer" style="text-align:center;color:#1976d2;"></p>
+<button onclick="verifyOTP()">Verify Email</button>
+</div>
+
+<!-- LOGIN -->
+<div id="loginBox" class="hidden">
+<h2>Login</h2>
+<input id="l_email" type="email" placeholder="Email">
+
+<div class="password-wrapper">
+<input id="l_password" type="password" placeholder="Password">
+<span class="toggle-eye" onclick="togglePassword('l_password',this)">Show</span>
+</div>
+
+<button onclick="login()">Login</button>
+<div class="toggle" onclick="showForgot()">Forgot Password?</div>
+<div class="toggle" onclick="showRegister()">Create account</div>
+</div>
+
+<!-- FORGOT -->
+<div id="forgotBox" class="hidden">
+<h2>Reset Password</h2>
+<input id="f_email" type="email" placeholder="Registered Email">
+<button onclick="sendResetOTP()">Send Reset OTP</button>
+<div class="toggle" onclick="showLogin()">Back to Login</div>
+</div>
+
+<!-- RESET OTP -->
+<div id="resetOtpBox" class="hidden">
+<h2>Verify OTP</h2>
+<input id="resetOtpInput" placeholder="Enter OTP">
+
+<div class="password-wrapper">
+<input id="newPassword" type="password" placeholder="New Password">
+<span class="toggle-eye" onclick="togglePassword('newPassword',this)">Show</span>
+</div>
+
+<p id="resetTimer" style="text-align:center;color:#1976d2;"></p>
+<button onclick="resetPassword()">Reset Password</button>
+</div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+emailjs.init("fyq7z0qv9m-OnVLeR");
+
+/* DOM ELEMENTS */
+const registerBox=document.getElementById("registerBox");
+const loginBox=document.getElementById("loginBox");
+const otpBox=document.getElementById("otpBox");
+const forgotBox=document.getElementById("forgotBox");
+const resetOtpBox=document.getElementById("resetOtpBox");
+const darkBtn = document.getElementById("darkToggle");
+
+/* VARIABLES */
+let generatedOTP="",otpExpiry=0,tempUser=null;
+let resetOTP="",resetExpiry=0,resetEmail="";
+let timerInterval,resetTimerInterval;
+
+/* TOAST FUNCTION */
+function showToast(msg,type="success"){
+  const t=document.getElementById("toast");
+  t.innerText=msg;
+  t.className="toast show "+type;
+  setTimeout(()=>{t.className="toast";},3000);
+}
+
+/* PASSWORD TOGGLE */
+function togglePassword(id,el){
+  const input=document.getElementById(id);
+  if(input.type==="password"){input.type="text";el.innerText="Hide";}
+  else{input.type="password";el.innerText="Show";}
+}
+
+/* DARK MODE */
+if(localStorage.getItem("darkMode")==="enabled"){document.body.classList.add("dark"); darkBtn.innerText="☀ Light Mode";}
+darkBtn.addEventListener("click",()=>{
+  document.body.classList.toggle("dark");
+  if(document.body.classList.contains("dark")){
+    localStorage.setItem("darkMode","enabled"); darkBtn.innerText="☀ Light Mode";
+  }else{
+    localStorage.setItem("darkMode","disabled"); darkBtn.innerText="🌙 Dark Mode";
+  }
+});
+
+/* SHOW/HIDE SECTIONS */
+function showLogin(){registerBox.classList.add("hidden");otpBox.classList.add("hidden");forgotBox.classList.add("hidden");resetOtpBox.classList.add("hidden");loginBox.classList.remove("hidden");}
+function showRegister(){loginBox.classList.add("hidden");registerBox.classList.remove("hidden");}
+function showForgot(){loginBox.classList.add("hidden");forgotBox.classList.remove("hidden");}
+
+/* PASSWORD STRENGTH */
+document.getElementById("r_password").addEventListener("input",function(){
+const pass=this.value;const msg=document.getElementById("strengthMsg");let strength=0;
+if(pass.length>=8)strength++;if(/[A-Z]/.test(pass))strength++;if(/[0-9]/.test(pass))strength++;if(/[!@#$%^&*]/.test(pass))strength++;
+if(strength<=1){msg.innerHTML="Weak";msg.style.color="red";}
+else if(strength<=3){msg.innerHTML="Medium";msg.style.color="orange";}
+else{msg.innerHTML="Strong";msg.style.color="green";}
+});
+
+/* OTP TIMER */
+function startTimer(seconds,elementId){
+let time=seconds;
+clearInterval(timerInterval);
+timerInterval=setInterval(()=>{
+const m=Math.floor(time/60);const s=time%60;
+document.getElementById(elementId).innerText=`OTP expires in ${m}:${s<10?"0":""}${s}`;
+time--;
+if(time<0){clearInterval(timerInterval);document.getElementById(elementId).innerText="OTP Expired";}
+},1000);
+}
+
+/* REGISTER & SEND OTP */
+function sendOTP(){
+const name=document.getElementById("r_name").value.trim();
+const email=document.getElementById("r_email").value.trim();
+const pass=document.getElementById("r_password").value.trim();
+const role=document.getElementById("r_role").value;
+if(!name||!email||!pass||!role){showToast("Fill all fields","error");return;}
+if(pass.length<8||!/[A-Z]/.test(pass)||!/[0-9]/.test(pass)){showToast("Weak password","error");return;}
+generatedOTP=Math.floor(100000+Math.random()*900000).toString();
+otpExpiry=Date.now()+120000;
+tempUser={name,email,password:pass,role,verified:false};
+emailjs.send("service_szkg9wi","template_rhh4oyp",{name,otp:generatedOTP,to_email:email})
+.then(()=>{showToast("OTP sent");registerBox.classList.add("hidden");otpBox.classList.remove("hidden");startTimer(120,"otpTimer");})
+.catch(()=>showToast("Email failed","error"));
+}
+
+/* VERIFY OTP */
+function verifyOTP(){
+if(Date.now()>otpExpiry){showToast("OTP expired","error");showRegister();return;}
+if(document.getElementById("otpInput").value!==generatedOTP){showToast("Invalid OTP","error");return;}
+tempUser.verified=true;
+let users=JSON.parse(localStorage.getItem("healthcare_users"))||[];
+users.push(tempUser);
+localStorage.setItem("healthcare_users",JSON.stringify(users));
+showToast("Verified! Login now");
+showLogin();
+}
+
+/* LOGIN */
+function login(){
+const users=JSON.parse(localStorage.getItem("healthcare_users"))||[];
+const l_email=document.getElementById("l_email").value.trim();
+const l_pass=document.getElementById("l_password").value.trim();
+const user=users.find(u=>u.email===l_email&&u.password===l_pass&&u.verified);
+if(!user){showToast("Invalid credentials","error");return;}
+localStorage.setItem("loggedInUser",JSON.stringify(user));
+if(user.role==="doctor")window.location.href="doctor-dashboard.html";
+else window.location.href="patient-dashboard.html";
+}
+
+/* FORGOT PASSWORD OTP */
+function sendResetOTP(){
+const email=document.getElementById("f_email").value.trim();
+let users=JSON.parse(localStorage.getItem("healthcare_users"))||[];
+const user=users.find(u=>u.email===email);
+if(!user){showToast("Email not registered","error");return;}
+resetOTP=Math.floor(100000+Math.random()*900000).toString();
+resetExpiry=Date.now()+120000;
+resetEmail=email;
+emailjs.send("service_szkg9wi","template_rhh4oyp",{name:user.name,otp:resetOTP,to_email:email})
+.then(()=>{showToast("Reset OTP sent");forgotBox.classList.add("hidden");resetOtpBox.classList.remove("hidden");startTimer(120,"resetTimer");})
+.catch(()=>showToast("Email failed","error"));
+}
+
+/* RESET PASSWORD */
+function resetPassword(){
+if(Date.now()>resetExpiry){showToast("OTP expired","error");showLogin();return;}
+if(document.getElementById("resetOtpInput").value!==resetOTP){showToast("Invalid OTP","error");return;}
+const newPass=document.getElementById("newPassword").value.trim();
+let users=JSON.parse(localStorage.getItem("healthcare_users"))||[];
+users=users.map(u=>{if(u.email===resetEmail)u.password=newPass;return u;});
+localStorage.setItem("healthcare_users",JSON.stringify(users));
+showToast("Password updated");
+showLogin();
+}
+</script>
+
+</body>
+</html>
