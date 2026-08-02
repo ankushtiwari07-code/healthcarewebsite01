@@ -1,1 +1,17 @@
+# Health Care Website
 
+## Description
+A healthcare web application that allows users to view doctor profiles and book appointments.
+
+## Technologies Used
+- HTML
+- CSS
+- JavaScript
+- PHP
+- MySQL
+
+## Features
+- Doctor Profiles
+- Appointment Booking
+- Contact Form
+- Responsive Design
